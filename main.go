@@ -17,25 +17,16 @@ func main(){
 	repo := repository.NewRepository(args)
 	serv := services.NewServices(repo)
 
-	donates, err := serv.Sortdata()
-	if err != nil {
-		fmt.Println(err)
+	if donates, err := serv.Sortdata(); err == nil {
+		if donateInfo, err := serv.CalculateDonate(donates); err == nil {
+			fmt.Printf("Performing donations...\n")
+			fmt.Printf("done.\n\n")
+			fmt.Printf("\t       Total Recieve: THB  %d\n",donateInfo.TotalSum)
+			fmt.Printf("\tSuccessfully donated: THB  %d\n",donateInfo.ValidSum)
+			fmt.Printf("\t     Faulty donation: THB   %d\n\n",donateInfo.InvalidSum)
+			fmt.Printf("\t  Average per person: THB     %d\n",(donateInfo.ValidSum/donateInfo.ValidCard))
+			fmt.Printf("\t          Top donest: THB     %d\n",donateInfo.TopDonate)
+			fmt.Printf("\t          Top donors: %s",donateInfo.TopDonor)
+		}
 	}
-
-	type Donate_info = services.DonateInfo
-	
-	var donate_info Donate_info
-	err = serv.CalculateDonate(donates, &donate_info)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Printf("Performing donations...\n")
-	fmt.Printf("done.\n\n")
-	fmt.Printf("\t       Total Recieve: THB  %d\n",donate_info.Total_sum)
-	fmt.Printf("\tSuccessfully donated: THB  %d\n",donate_info.Valid_sum)
-	fmt.Printf("\t     Faulty donation: THB   %d\n\n",donate_info.Invalid_sum)
-	fmt.Printf("\t  Average per person: THB     %d\n",(donate_info.Valid_sum/donate_info.Valid_card))
-	fmt.Printf("\t          Top donest: THB     %d\n",donate_info.Top_donate)
-	fmt.Printf("\t          Top donors: %s",donate_info.Top_donor)
 }
