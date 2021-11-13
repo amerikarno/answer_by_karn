@@ -7,10 +7,6 @@ import (
 	"os"
 )
 
-type donate struct{
-	services.DonateInfo
-}
-
 func main(){
 	args := os.Args[1]
 	
