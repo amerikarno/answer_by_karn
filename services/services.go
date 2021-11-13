@@ -80,7 +80,7 @@ func (s services) Sortdata() (donates []donate,err error) {
 			donates = append(donates, donat)
 		}
 	}
-	return donates, err
+	return donates, nil
 }
 
 func (s services) CalculateDonate(donates []donate) (DonateInfo DonateInfo, err error){
