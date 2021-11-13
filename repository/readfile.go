@@ -5,12 +5,14 @@ import (
 	"strings"
 )
 
+// Repository ...
 type Repository interface{
 	Readfile() (*string, error)
 }
 
 type repository struct{args string}
 
+// NewRepository ...
 func NewRepository(args string) Repository{
 	return repository{args: args}
 }

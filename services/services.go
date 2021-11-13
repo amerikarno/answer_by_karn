@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// A DonateInfo ... allow main.go use DonateInfo struct
 type DonateInfo struct{
 	InvalidSum int
 	ValidSum int
@@ -32,6 +33,7 @@ type card struct {
 	expirationYear	int
 }
 
+// A Services interface ... aPlug
 type Services interface{
 	Sortdata() (donates []donate,err error)
 	CalculateDonate(donates []donate) (DonateInfo DonateInfo, err error)
@@ -39,6 +41,7 @@ type Services interface{
 
 type services struct{repos repository.Repository}
 
+// NewServices ... function: an Adapter
 func NewServices(repos repository.Repository) Services{
 	return services{repos}
 }
