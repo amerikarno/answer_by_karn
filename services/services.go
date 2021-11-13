@@ -2,6 +2,7 @@ package services
 
 import (
 	"challenge-go/repository"
+	"errors"
 	"strconv"
 	"strings"
 	"time"
@@ -18,39 +19,38 @@ type DonateInfo struct{
 	TopDonor string
 }
 
-type Donate struct {
+type donate struct {
 	amount int
 	ccnumber string
 	cvv string
-	card Card
+	card card
 }
 
-type Card struct {
+type card struct {
 	name string
 	expirationMonth int
 	expirationYear	int
 }
 
 type Services interface{
-	Sortdata() ([]Donate, error)
-	CalculateDonate(donates []Donate) (DonateInfo DonateInfo, err error)
+	Sortdata() (donates []donate,err error)
+	CalculateDonate(donates []donate) (DonateInfo DonateInfo, err error)
 }
 
 type services struct{repos repository.Repository}
 
 func NewServices(repos repository.Repository) Services{
-	return services{repos: repos}
+	return services{repos}
 }
 
-func (s services) Sortdata() ([]Donate, error) {
+func (s services) Sortdata() (donates []donate,err error) {
 	csv, err := s.repos.Readfile()
 	if err != nil {
-		return nil, err
+		return nil, errors.New("cannot read file")
 	}
 	
-	var donates []Donate
 	for i, lines := range strings.Split(*csv,"\n") {
-		var donate Donate
+		var donat donate
 		if i > 0 {
 			line := make([]string,6,6)
 			line = strings.Split(lines,",")
@@ -58,13 +58,13 @@ func (s services) Sortdata() ([]Donate, error) {
 				if month, err := strconv.Atoi(line[4]); err == nil {
 					if year, err := strconv.Atoi(line[5]); err == nil {
 
-						card := Card{
+						card := card{
 							name: line[0],
 							expirationMonth: month,
 							expirationYear: year,
 						}
 
-						donate = Donate{
+						donat = donate{
 							amount: amount,
 							ccnumber: line[2],
 							cvv: line[3],
@@ -74,13 +74,13 @@ func (s services) Sortdata() ([]Donate, error) {
 				}
 			}
 			
-			donates = append(donates, donate)
+			donates = append(donates, donat)
 		}
 	}
 	return donates, err
 }
 
-func (s services) CalculateDonate(donates []Donate) (DonateInfo DonateInfo, err error){
+func (s services) CalculateDonate(donates []donate) (DonateInfo DonateInfo, err error){
 
 	thisyear := time.Now().Year()
 	thismonth := time.Now().Month()
