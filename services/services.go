@@ -76,6 +76,9 @@ func (s services) Sortdata() (donates []donate,err error) {
 					}
 				}
 			}
+			if err != nil {
+				return nil, err
+			}
 			
 			donates = append(donates, donat)
 		}
