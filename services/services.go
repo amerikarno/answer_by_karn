@@ -43,10 +43,10 @@ type services struct{repos repository.Repository}
 
 // NewServices ... function: an Adapter
 func NewServices(repos repository.Repository) Services{
-	return services{repos}
+	return &services{repos: repos}
 }
 
-func (s services) Sortdata() (donates []donate,err error) {
+func (s *services) Sortdata() (donates []donate,err error) {
 	csv, err := s.repos.Readfile()
 	if err != nil {
 		return nil, errors.New("cannot read file")
@@ -86,7 +86,7 @@ func (s services) Sortdata() (donates []donate,err error) {
 	return donates, nil
 }
 
-func (s services) CalculateDonate(donates []donate) (DonateInfo DonateInfo, err error){
+func (s *services) CalculateDonate(donates []donate) (DonateInfo DonateInfo, err error){
 
 	thisyear := time.Now().Year()
 	thismonth := time.Now().Month()

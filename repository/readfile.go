@@ -14,11 +14,11 @@ type repository struct{args string}
 
 // NewRepository ...
 func NewRepository(args string) Repository{
-	return repository{args: args}
+	return &repository{args: args}
 }
 
 
-func (r repository) Readfile() (*string, error){
+func (r *repository) Readfile() (*string, error){
 	txt, err := ioutil.ReadFile(r.args)
 		if err != nil {
 			return nil, err
